@@ -5,13 +5,13 @@ import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/write-client";
 import { Kolker_Brush } from "next/font/google";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut } = (NextAuth as any)({
   providers: [GitHub],
   callbacks: {
     async signIn({
       user: { name, email, image },
       profile: { id, login, bio },
-    }) {
+    }: any) {
       const existingUser = await client
         .withConfig({ useCdn: false })
         .fetch(AUTHOR_BY_GITHUB_ID_QUERY, {
@@ -32,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return true;
     },
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile }: any) {
       if (account && profile) {
         const user = await client
           .withConfig({ useCdn: false })
@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       Object.assign(session, { id: token.id });
       return session;
     },

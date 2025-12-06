@@ -7,7 +7,7 @@ import { unstable_after as after } from "next/server";
 const View = async ({ id }: { id: string }) => {
   const { views: totalViews } = await client
     .withConfig({ useCdn: false })
-    .fetch(STARTUP_VIEWS_QUERY, { id });
+    .fetch<any>(STARTUP_VIEWS_QUERY, { id });
 
   after(
     async () =>

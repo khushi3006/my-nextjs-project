@@ -31,12 +31,13 @@ export const experimental_ppr = true;
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
-  const [post, { select: editorPosts }] = await Promise.all([
-    client.fetch(STARTUP_BY_ID_QUERY, { id }),
-    client.fetch(PLAYLIST_BY_SLUG_QUERY, {
+  const [post, playlist] = await Promise.all([
+    client.fetch<any>(STARTUP_BY_ID_QUERY, { id }),
+    client.fetch<any>(PLAYLIST_BY_SLUG_QUERY, {
       slug: "editor-picks-new",
     }),
   ]);
+  const editorPosts = playlist?.select;
 
   if (!post) return notFound();
 
@@ -101,7 +102,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
             <p className="text-30-semibold">Editor Picks</p>
 
             <ul className="mt-7 card_grid-sm">
-              {editorPosts.map((post: StartupTypeCard, i: number) => (
+              {editorPosts.map((post: any, i: number) => (
                 <StartupCard key={i} post={post} />
               ))}
             </ul>
